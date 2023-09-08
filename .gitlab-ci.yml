@@ -1,0 +1,22 @@
+stages:
+  - lint
+  - test
+
+flake8:
+  stage: lint
+  image: python:3.10-slim-bullseye
+  before_script:
+    - pip install -q flake8
+  script:
+    - flake8
+
+pytest:
+  stage: test
+  image: python:3.10-slim-bullseye
+
+  before_script:
+    - pip install -r requirements/local.txt
+
+  script:
+    - pytest
+
