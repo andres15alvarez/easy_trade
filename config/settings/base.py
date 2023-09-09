@@ -74,13 +74,13 @@ DJANGO_APPS = [
     "django.forms",
 ]
 THIRD_PARTY_APPS = [
-        "rest_framework",
-        "corsheaders",
-        "drf_spectacular",
+    "rest_framework",
+    "corsheaders",
+    "drf_spectacular",
 ]
 
 LOCAL_APPS = [
-    "easy_trade.users",
+    "easy_trade.user",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -93,9 +93,9 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
-AUTH_USER_MODEL = "users.User"
+AUTH_USER_MODEL = "user.User"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
-LOGIN_REDIRECT_URL = "users:redirect"
+LOGIN_REDIRECT_URL = "user:redirect"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
 LOGIN_URL = "account_login"
 
@@ -250,7 +250,6 @@ LOGGING = {
 }
 
 
-
 # django-rest-framework
 # -------------------------------------------------------------------------------
 # django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
@@ -266,8 +265,10 @@ REST_FRAMEWORK = {
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
 CORS_URLS_REGEX = r"^/api/.*$"
 
-# By Default swagger ui is available only to admin user(s). You can change permission classes to change that
-# See more configuration options at https://drf-spectacular.readthedocs.io/en/latest/settings.html#settings
+# By Default swagger ui is available only to admin user(s).
+# You can change permission classes to change that
+# See more configuration options at
+# https://drf-spectacular.readthedocs.io/en/latest/settings.html#settings
 SPECTACULAR_SETTINGS = {
     "TITLE": "easy_trade API",
     "DESCRIPTION": "Documentation of API endpoints of easy_trade",
