@@ -11,7 +11,7 @@ class BaseModel(models.Model):
         abstract = True
 
 
-class BaseTimestampedModel(models.Model):
+class BaseControlModel(models.Model):
 
     created_at = models.DateTimeField(
         auto_now_add=True,
