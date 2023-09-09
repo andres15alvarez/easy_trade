@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from config.models import BaseControlModel, BaseModel
-from easy_trade.catalog.models import City, Country, Gender, UserType
+from easy_trade.catalog.models import City, Country, Document, Gender, UserType
 
 
 class User(AbstractUser, BaseModel, BaseControlModel):
@@ -35,3 +35,24 @@ class User(AbstractUser, BaseModel, BaseControlModel):
 
         """
         return reverse("user:detail", kwargs={"username": self.username})
+
+
+class UserDocument(BaseModel, BaseControlModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="documents")
+    document = models.CharField(max_length=150)
+    document_type = models.ForeignKey(
+        Document, on_delete=models.CASCADE, related_name="users"
+    )
+
+    class Meta:
+        db_table = "user_document"
+
+
+class UserOTP(BaseModel, BaseControlModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="otps")
+    otp = models.CharField(max_length=8)
+    method = models.CharField(max_length=50)
+    valid_at = models.DateTimeField()
+
+    class Meta:
+        db_table = "user_otp"
