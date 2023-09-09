@@ -69,7 +69,6 @@ DJANGO_APPS = [
     "django.contrib.sites",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # "django.contrib.humanize", # Handy template tags
     "django.contrib.admin",
     "django.forms",
 ]
@@ -82,6 +81,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "easy_trade.user",
     "easy_trade.catalog",
+    "easy_trade.stock",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
