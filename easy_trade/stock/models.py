@@ -39,7 +39,9 @@ class Transaction(BaseModel, BaseControlModel):
     buyer = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="investments"
     )
-    stock = models.ForeignKey(Stock, on_delete=models.CASCADE, related_name="wallets")
+    stock = models.ForeignKey(
+        Stock, on_delete=models.CASCADE, related_name="transactions"
+    )
     quantity = models.IntegerField()
     price = models.IntegerField()
 
