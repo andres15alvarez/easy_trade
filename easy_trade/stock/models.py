@@ -17,7 +17,7 @@ class HistoricalStock(models.Model):
     stock = models.ForeignKey(Stock, on_delete=models.CASCADE, related_name="prices")
     open = models.IntegerField(null=False)
     high = models.IntegerField(null=False)
-    close = models.IntegerField(null=False)
+    low = models.IntegerField(null=False)
     close = models.IntegerField(null=False)
     day = models.DateField()
 
