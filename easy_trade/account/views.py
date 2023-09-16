@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from easy_trade.account.models import Account, AccountTransaction, Card
-from easy_trade.account.serializer import (
+from easy_trade.account.serializers import (
     AccountSerializer,
     AccountTransactionSerializer,
     CardSerializer,
