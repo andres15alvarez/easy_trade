@@ -8,10 +8,12 @@ urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
     # Your stuff: custom urls includes go here
     # path(),
+    path("api/user", include("easy_trade.user.urls")),
     path("api/token", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/stock", include("easy_trade.stock.urls")),
     path("api/account", include("easy_trade.account.urls")),
+    path("api/catalog", include("easy_trade.catalog.urls")),
 ]
 
 if settings.DEBUG:
