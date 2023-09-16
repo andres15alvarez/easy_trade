@@ -12,6 +12,10 @@ class User(AbstractUser, BaseModel, BaseControlModel):
     Default custom user model for easy_trade.
     """
 
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
+    username = None
+    email = models.EmailField(_("Email address of User"), unique=True)
     first_name = models.CharField(_("Name of User"), blank=True, max_length=255)
     last_name = models.CharField(_("Last name of User"), blank=True, max_length=255)
     date_of_birth = models.DateField(_("Date of birth of User"), blank=True)
