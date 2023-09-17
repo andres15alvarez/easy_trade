@@ -17,6 +17,8 @@ class CardSerializer(serializers.ModelSerializer):
 
 
 class AccountTransactionSerializer(serializers.ModelSerializer):
+    type = serializers.ChoiceField(choices=["deposit", "withdraw"])
+
     class Meta:
         model = AccountTransaction
         exclude = ["account"]
