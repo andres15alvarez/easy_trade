@@ -1,10 +1,16 @@
+from django.conf import settings
+from django.db.models import Q
 from rest_framework import generics, status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from easy_trade.stock.models import HistoricalStock, Stock, Wallet
+from easy_trade.account.models import Account
+from easy_trade.stock.models import HistoricalStock, Stock, Transaction, Wallet
 from easy_trade.stock.serializers import (
+    CreateTransactionSerializer,
     HistoricalStockSerializer,
     StockSerializer,
+    TransactionSerializer,
     WalletSerializer,
 )
 
@@ -21,6 +27,51 @@ class StockView(generics.ListAPIView):
         queryset = Stock.objects.filter()
         serializer = StockSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class StockTransactionView(APIView):
+    def get(self, request):
+        queryset = Transaction.objects.filter(
+            Q(seller=request.user) | Q(buyer=request.user)
+        )
+        serializer = TransactionSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serializer = CreateTransactionSerializer(request.data)
+        serializer.is_valid(raise_exception=True)
+        stock = serializer.validated_data["stock"]
+        account = Account.objects.get(user=request.user)
+        wallet, _ = Wallet.objects.get_or_create(user=request.user, stock=stock)
+        if serializer.validated_data["type"] == "buy":
+            amount = stock.current_price * serializer.validated_data["quantity"]
+            if account.balance < amount:
+                return Response(
+                    {"error": "Saldo insuficiente"},
+                    status=status.HTTP_406_NOT_ACCEPTABLE,
+                )
+            account.balance -= amount
+            account.save()
+            wallet.quantity += serializer.validated_data["quantity"]
+            wallet.save()
+            serializer.save(
+                buyer=request.user, price=stock.current_price, seller=settings.BROKER_ID
+            )
+        if serializer.validated_data["type"] == "sale":
+            amount = stock.current_price * serializer.validated_data["quantity"]
+            if wallet.quantity < serializer.validated_data["quantity"]:
+                return Response(
+                    {"error": "Acciones insuficientes"},
+                    status=status.HTTP_406_NOT_ACCEPTABLE,
+                )
+            account.balance += amount
+            account.save()
+            wallet.quantity -= serializer.validated_data["quantity"]
+            wallet.save()
+            serializer.save(
+                seller=request.user, price=stock.current_price, buyer=settings.BROKER_ID
+            )
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class StockHistoricalView(generics.ListAPIView):
