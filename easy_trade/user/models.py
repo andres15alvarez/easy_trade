@@ -50,13 +50,3 @@ class UserDocument(BaseModel, BaseControlModel):
 
     class Meta:
         db_table = "user_document"
-
-
-class UserOTP(BaseModel, BaseControlModel):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="otps")
-    otp = models.CharField(max_length=8)
-    method = models.CharField(max_length=50)
-    valid_at = models.DateTimeField()
-
-    class Meta:
-        db_table = "user_otp"

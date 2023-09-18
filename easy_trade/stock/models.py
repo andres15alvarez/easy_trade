@@ -8,7 +8,6 @@ class Stock(BaseModel):
     name = models.CharField(max_length=150)
     code = models.CharField(max_length=10)
     current_price = models.IntegerField(null=False)
-    quantity = models.IntegerField(null=False, default=0)
 
     class Meta:
         db_table = "stock"
