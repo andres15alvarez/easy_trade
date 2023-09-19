@@ -42,4 +42,4 @@ class CreateTransactionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Transaction
-        fields = ["stock", "quantity"]
+        fields = ["stock", "quantity", "type"]

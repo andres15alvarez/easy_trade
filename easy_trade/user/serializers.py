@@ -14,6 +14,10 @@ class UserSerializer(serializers.ModelSerializer):
         validated_data["password"] = make_password(validated_data.get("password"))
         return super().create(validated_data)
 
+    def update(self, instance, validated_data):
+        validated_data["password"] = instance.password
+        return super().update(instance, validated_data)
+
 
 class UserPasswordSerializer(serializers.Serializer):
     old = serializers.CharField(max_length=128)

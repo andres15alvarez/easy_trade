@@ -38,11 +38,13 @@ class StockTransactionView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        serializer = CreateTransactionSerializer(request.data)
+        serializer = CreateTransactionSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         stock = serializer.validated_data["stock"]
         account = Account.objects.get(user=request.user)
-        wallet, _ = Wallet.objects.get_or_create(user=request.user, stock=stock)
+        wallet, _ = Wallet.objects.get_or_create(
+            user=request.user, stock=stock, defaults={"quantity": 0}
+        )
         if serializer.validated_data["type"] == "buy":
             amount = stock.current_price * serializer.validated_data["quantity"]
             if account.balance < amount:
@@ -54,8 +56,12 @@ class StockTransactionView(APIView):
             account.save()
             wallet.quantity += serializer.validated_data["quantity"]
             wallet.save()
-            serializer.save(
-                buyer=request.user, price=stock.current_price, seller=settings.BROKER_ID
+            Transaction.objects.create(
+                seller_id=settings.BROKER_ID,
+                price=stock.current_price,
+                buyer=request.user,
+                stock=serializer.validated_data["stock"],
+                quantity=serializer.validated_data["quantity"],
             )
         if serializer.validated_data["type"] == "sale":
             amount = stock.current_price * serializer.validated_data["quantity"]
@@ -68,8 +74,12 @@ class StockTransactionView(APIView):
             account.save()
             wallet.quantity -= serializer.validated_data["quantity"]
             wallet.save()
-            serializer.save(
-                seller=request.user, price=stock.current_price, buyer=settings.BROKER_ID
+            Transaction.objects.create(
+                seller=request.user,
+                price=stock.current_price,
+                buyer_id=settings.BROKER_ID,
+                stock=serializer.validated_data["stock"],
+                quantity=serializer.validated_data["quantity"],
             )
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
